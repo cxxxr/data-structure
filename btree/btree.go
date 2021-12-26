@@ -19,12 +19,20 @@ type Node struct {
 	value  Element
 }
 
+func (n *Node) Parent() *Node{
+	return n.parent
+}
+
 func (n *Node) Left() *Node {
 	return n.left
 }
 
 func (n *Node) Right() *Node {
 	return n.right
+}
+
+func (n *Node) setParent(v *Node) {
+	n.parent = v
 }
 
 func (n *Node) setLeft(v *Node) {
@@ -59,21 +67,21 @@ func next(prev, current *Node) (*Node, *Node) {
 			if current.right != nil {
 				return current.right
 			} else {
-				return current.parent
+				return current.Parent()
 			}
 		case current.right:
-			if current.parent != nil {
-				return current.parent
+			if current.Parent() != nil {
+				return current.Parent()
 			} else {
 				return nil
 			}
-		case current.parent:
+		case current.Parent():
 			if current.Left() != nil {
 				return current.Left()
 			} else if current.right != nil {
 				return current.right
 			} else {
-				return current.parent
+				return current.Parent()
 			}
 		default:
 			log.Fatal("unreachable code!")
@@ -94,7 +102,7 @@ func (btree *Btree) traversePrint() {
 	var prev *Node
 
 	for current != nil {
-		if prev == nil || prev == current.parent {
+		if prev == nil || prev == current.Parent() {
 			log.Printf("value: %d\n", current.value)
 		}
 		prev, current = next(prev, current)
@@ -205,7 +213,7 @@ func (node *Node) splice(btree *Btree) {
 		btree.root = c
 		p = nil
 	} else {
-		p = node.parent
+		p = node.Parent()
 		switch node {
 		case p.Left():
 			p.setLeft(c)
@@ -216,7 +224,7 @@ func (node *Node) splice(btree *Btree) {
 		}
 	}
 	if c != nil {
-		c.parent = p
+		c.setParent(p)
 	}
 }
 
@@ -276,7 +284,7 @@ func (current *Node) traverseSetParent(parent *Node) {
 		return
 	}
 
-	current.parent = parent
+	current.setParent(parent)
 	if current.Left() != nil {
 		current.Left().traverseSetParent(current)
 	}
