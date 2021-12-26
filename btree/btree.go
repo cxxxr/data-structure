@@ -1,11 +1,11 @@
 package btree
 
 import (
-	"log"
 	"fmt"
+	"log"
 )
 
-type Element interface{
+type Element interface {
 	Eq(Element) bool
 	Lt(Element) bool
 	fmt.Stringer
@@ -23,7 +23,7 @@ const (
 // Node
 type Node struct {
 	edges []*Node
-	value  Element
+	value Element
 }
 
 func newNode(parent *Node, value Element) *Node {
@@ -35,7 +35,7 @@ func newNode(parent *Node, value Element) *Node {
 	return n
 }
 
-func (n *Node) Parent() *Node{
+func (n *Node) Parent() *Node {
 	return n.edges[edgeIndexParent]
 }
 
