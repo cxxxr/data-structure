@@ -13,34 +13,45 @@ type Element interface{
 
 // Node
 type Node struct {
-	parent *Node
-	left   *Node
-	right  *Node
+	edges []*Node
 	value  Element
 }
 
+func newNode(parent *Node, value Element) *Node {
+	n := &Node{
+		value: value,
+		edges: make([]*Node, 3, 3),
+	}
+	n.edges[0] = parent
+	return n
+}
+
+func (n *Node) initEdges() {
+	n.edges = make([]*Node, 3, 3)
+}
+
 func (n *Node) Parent() *Node{
-	return n.parent
+	return n.edges[0]
 }
 
 func (n *Node) Left() *Node {
-	return n.left
+	return n.edges[1]
 }
 
 func (n *Node) Right() *Node {
-	return n.right
+	return n.edges[2]
 }
 
 func (n *Node) setParent(v *Node) {
-	n.parent = v
+	n.edges[0] = v
 }
 
 func (n *Node) setLeft(v *Node) {
-	n.left = v
+	n.edges[1] = v
 }
 
 func (n *Node) setRight(v *Node) {
-	n.right = v
+	n.edges[2] = v
 }
 
 // Btree
@@ -64,12 +75,12 @@ func next(prev, current *Node) (*Node, *Node) {
 		case nil:
 			return current.Left()
 		case current.Left():
-			if current.right != nil {
-				return current.right
+			if current.Right() != nil {
+				return current.Right()
 			} else {
 				return current.Parent()
 			}
-		case current.right:
+		case current.Right():
 			if current.Parent() != nil {
 				return current.Parent()
 			} else {
@@ -78,8 +89,8 @@ func next(prev, current *Node) (*Node, *Node) {
 		case current.Parent():
 			if current.Left() != nil {
 				return current.Left()
-			} else if current.right != nil {
-				return current.right
+			} else if current.Right() != nil {
+				return current.Right()
 			} else {
 				return current.Parent()
 			}
@@ -126,10 +137,10 @@ func (btree *Btree) findLastNode(v Element) *Node {
 			}
 			current = current.Left()
 		} else {
-			if current.right == nil {
+			if current.Right() == nil {
 				return current
 			}
-			current = current.right
+			current = current.Right()
 		}
 	}
 
@@ -153,10 +164,10 @@ func (btree *Btree) findNode(v Element) *Node {
 			}
 			current = current.Left()
 		} else {
-			if current.right == nil {
+			if current.Right() == nil {
 				return nil
 			}
-			current = current.right
+			current = current.Right()
 		}
 	}
 }
@@ -173,18 +184,15 @@ func (btree *Btree) Add(v Element) bool {
 	}
 
 	node := btree.findLastNode(v)
-	newNode := &Node{
-		parent: node,
-		value:  v,
-	}
+	child := newNode(node, v)
 
 	switch {
 	case node == nil:
-		btree.root = newNode
+		btree.root = child
 	case v.Lt(node.value):
-		node.setLeft(newNode)
+		node.setLeft(child)
 	case node.value.Lt(v):
-		node.setRight(newNode)
+		node.setRight(child)
 	default:
 		// ここに到達するとnewNodeは捨てられる
 		return false
@@ -196,13 +204,13 @@ func (btree *Btree) Add(v Element) bool {
 
 // Remove
 func (node *Node) splice(btree *Btree) {
-	if node.Left() != nil && node.right != nil {
+	if node.Left() != nil && node.Right() != nil {
 		log.Fatal("unreachable")
 	}
 
 	var c *Node
 	if node.Left() == nil {
-		c = node.right
+		c = node.Right()
 	} else {
 		c = node.Left()
 	}
@@ -217,7 +225,7 @@ func (node *Node) splice(btree *Btree) {
 		switch node {
 		case p.Left():
 			p.setLeft(c)
-		case p.right:
+		case p.Right():
 			p.setRight(c)
 		default:
 			log.Fatal("unreachable")
@@ -229,12 +237,12 @@ func (node *Node) splice(btree *Btree) {
 }
 
 func (node *Node) remove(btree *Btree) {
-	if node.Left() == nil || node.right == nil {
+	if node.Left() == nil || node.Right() == nil {
 		node.splice(btree)
 		return
 	}
 
-	alt := node.right
+	alt := node.Right()
 	for alt.Left() != nil {
 		alt = alt.Left()
 	}
@@ -265,8 +273,8 @@ func (current *Node) recursivePrint() {
 	if current.Left() != nil {
 		current.Left().recursivePrint()
 	}
-	if current.right != nil {
-		current.right.recursivePrint()
+	if current.Right() != nil {
+		current.Right().recursivePrint()
 	}
 }
 
@@ -284,12 +292,13 @@ func (current *Node) traverseSetParent(parent *Node) {
 		return
 	}
 
+	current.initEdges()
 	current.setParent(parent)
 	if current.Left() != nil {
 		current.Left().traverseSetParent(current)
 	}
-	if current.right != nil {
-		current.right.traverseSetParent(current)
+	if current.Right() != nil {
+		current.Right().traverseSetParent(current)
 	}
 }
 
