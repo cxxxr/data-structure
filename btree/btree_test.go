@@ -135,3 +135,24 @@ func TestRemove(t *testing.T) {
 	})
 	testBtreeShape(t, btree, expected)
 }
+
+func TestTraverse(t *testing.T) {
+	values := []IntElement{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
+	btree := genTestingBtree(values)
+
+	actual := make([]int, 0)
+	btree.Traverse(func (n *Node) {
+		actual = append(actual, int(n.value.(IntElement)))
+	})
+
+	if len(actual) != len(values) {
+		t.Fatal("len(vec) != len(values)")
+	}
+
+	expected := []int{7, 3, 1, 5, 4, 6, 11, 9, 8, 13, 12, 14}
+	for i := range actual {
+		if actual[i] != int(expected[i]) {
+			t.Fatalf("actual[%d] != expected[%d]", i, i)
+		}
+	}
+}

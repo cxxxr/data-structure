@@ -100,7 +100,7 @@ func next(prev, current *Node) (*Node, *Node) {
 	return current, next
 }
 
-func (btree *Btree) traversePrint() {
+func (btree *Btree) Traverse(fn func(*Node)) {
 	logPrefix := log.Prefix()
 	defer log.SetPrefix(logPrefix)
 	log.SetPrefix("traversePrint: ")
@@ -110,7 +110,7 @@ func (btree *Btree) traversePrint() {
 
 	for current != nil {
 		if prev == nil || prev == current.Parent() {
-			log.Printf("value: %d\n", current.value)
+			fn(current)
 		}
 		prev, current = next(prev, current)
 	}
