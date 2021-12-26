@@ -10,11 +10,11 @@ import (
 
 func (node *Node) dot(output io.StringWriter) {
 	if node.left != nil {
-		output.WriteString(fmt.Sprintf("%d -> %d;\n", node.value, node.left.value))
+		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.value, node.left.value))
 		node.left.dot(output)
 	}
 	if node.right != nil {
-		output.WriteString(fmt.Sprintf("%d -> %d;\n", node.value, node.right.value))
+		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.value, node.right.value))
 		node.right.dot(output)
 	}
 }

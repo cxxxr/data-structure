@@ -2,14 +2,21 @@ package btree
 
 import (
 	"log"
+	"fmt"
 )
+
+type Element interface{
+	Eq(Element) bool
+	Lt(Element) bool
+	fmt.Stringer
+}
 
 // Node
 type Node struct {
 	left   *Node
 	right  *Node
 	parent *Node
-	value  int
+	value  Element
 }
 
 // Btree
@@ -79,64 +86,64 @@ func (btree *Btree) traversePrint() {
 }
 
 // Find
-func (btree *Btree) findLastNode(v int) *Node {
+func (btree *Btree) findLastNode(v Element) *Node {
 	current := btree.root
 	var prev *Node
 
 	for current != nil {
 		prev = current
-		if current.value == v {
+		if v.Eq(current.value) {
 			return current
 		}
 
-		if current.value < v {
-			if current.right == nil {
-				return current
-			}
-			current = current.right
-		} else {
+		if v.Lt(current.value) {
 			if current.left == nil {
 				return current
 			}
 			current = current.left
+		} else {
+			if current.right == nil {
+				return current
+			}
+			current = current.right
 		}
 	}
 
 	return prev
 }
 
-func (btree *Btree) findNode(v int) *Node {
+func (btree *Btree) findNode(v Element) *Node {
 	if btree == nil {
 		return nil
 	}
 
 	current := btree.root
 	for {
-		if current.value == v {
+		if v.Eq(current.value) {
 			return current
 		}
 
-		if current.value < v {
-			if current.right == nil {
-				return nil
-			}
-			current = current.right
-		} else {
+		if v.Lt(current.value) {
 			if current.left == nil {
 				return nil
 			}
 			current = current.left
+		} else {
+			if current.right == nil {
+				return nil
+			}
+			current = current.right
 		}
 	}
 }
 
-func (btree *Btree) Find(v int) bool {
+func (btree *Btree) Find(v Element) bool {
 	node := btree.findNode(v)
 	return node != nil
 }
 
 // Add
-func (btree *Btree) Add(v int) bool {
+func (btree *Btree) Add(v Element) bool {
 	if btree == nil {
 		log.Fatal("assertion failed (btree.root == nil)")
 	}
@@ -150,10 +157,10 @@ func (btree *Btree) Add(v int) bool {
 	switch {
 	case node == nil:
 		btree.root = newNode
-	case node.value < v:
-		node.right = newNode
-	case node.value > v:
+	case v.Lt(node.value):
 		node.left = newNode
+	case node.value.Lt(v):
+		node.right = newNode
 	default:
 		// ここに到達するとnewNodeは捨てられる
 		return false
@@ -212,7 +219,7 @@ func (node *Node) remove(btree *Btree) {
 	alt.splice(btree)
 }
 
-func (btree *Btree) Remove(v int) bool {
+func (btree *Btree) Remove(v Element) bool {
 	if btree == nil {
 		log.Fatal("assertion failed (btree.root == nil)")
 	}
@@ -268,4 +275,38 @@ func (btree *Btree) traverseSetParent() {
 	log.SetPrefix("traverseSetParent: ")
 
 	btree.root.traverseSetParent(nil)
+}
+
+// IntElement
+type IntElement int
+
+func (lhs IntElement) Eq(rhs Element) bool {
+	v := rhs.(IntElement)
+	return int(lhs) == int(v)
+}
+
+func (lhs IntElement) Lt(rhs Element) bool {
+	v := rhs.(IntElement)
+	return int(lhs) < int(v)
+}
+
+func (e IntElement) String() string {
+	return fmt.Sprintf("%d", int(e))
+}
+
+// RuneElement
+type RuneElement rune
+
+func (lhs RuneElement) Eq(rhs Element) bool {
+	v := rhs.(RuneElement)
+	return rune(lhs) == rune(v)
+}
+
+func (lhs RuneElement) Lt(rhs Element) bool {
+	v := rhs.(RuneElement)
+	return rune(lhs) < rune(v)
+}
+
+func (e RuneElement) String() string {
+	return string(rune(e))
 }
