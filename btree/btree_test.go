@@ -54,7 +54,7 @@ func genTestingBtree(values []IntElement) *Btree {
 
 func toDot(btree *Btree) string {
 	var builder strings.Builder
-	btree.PrintDot(&builder)
+	btree.GenDot(&builder)
 	return builder.String()
 }
 
