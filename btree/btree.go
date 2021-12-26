@@ -11,6 +11,15 @@ type Element interface{
 	fmt.Stringer
 }
 
+type edgeIndex int
+
+const (
+	edgeIndexParent edgeIndex = iota
+	edgeIndexLeft
+	edgeIndexRight
+	edgeNum
+)
+
 // Node
 type Node struct {
 	edges []*Node
@@ -20,34 +29,34 @@ type Node struct {
 func newNode(parent *Node, value Element) *Node {
 	n := &Node{
 		value: value,
-		edges: make([]*Node, 3, 3),
+		edges: make([]*Node, edgeNum),
 	}
 	n.edges[0] = parent
 	return n
 }
 
 func (n *Node) Parent() *Node{
-	return n.edges[0]
+	return n.edges[edgeIndexParent]
 }
 
 func (n *Node) Left() *Node {
-	return n.edges[1]
+	return n.edges[edgeIndexLeft]
 }
 
 func (n *Node) Right() *Node {
-	return n.edges[2]
+	return n.edges[edgeIndexRight]
 }
 
 func (n *Node) setParent(v *Node) {
-	n.edges[0] = v
+	n.edges[edgeIndexParent] = v
 }
 
 func (n *Node) setLeft(v *Node) {
-	n.edges[1] = v
+	n.edges[edgeIndexLeft] = v
 }
 
 func (n *Node) setRight(v *Node) {
-	n.edges[2] = v
+	n.edges[edgeIndexRight] = v
 }
 
 // Btree
