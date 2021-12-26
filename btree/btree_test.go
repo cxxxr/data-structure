@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestAdd(t *testing.T) {
+func TestAddFind(t *testing.T) {
 	var btree Btree
 	values := []IntElement{1, 7, 4, 0, 9, 2, 3, 5, 8, 6}
 	for i, v := range values {
@@ -25,6 +25,10 @@ func TestAdd(t *testing.T) {
 		if btree.Add(v) {
 			t.Fatalf("btree.Add(%v)", v)
 		}
+	}
+
+	if btree.Find(IntElement(100)) {
+		t.Fatal("btree.Find(100)")
 	}
 }
 
