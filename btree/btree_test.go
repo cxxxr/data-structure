@@ -6,44 +6,44 @@ import (
 	"testing"
 )
 
-func newBtree() *Btree {
-	btree := &Btree{
-		root: &Node{
-			left: &Node{
-				value: IntElement(1),
-			},
-			value: IntElement(2),
-			right: &Node{
-				value: IntElement(3),
-			},
-		},
-		len: 3,
-	}
-	btree.traverseSetParent()
-	return btree
-}
+// func newBtree() *Btree {
+// 	btree := &Btree{
+// 		root: &Node{
+// 			left: &Node{
+// 				value: IntElement(1),
+// 			},
+// 			value: IntElement(2),
+// 			right: &Node{
+// 				value: IntElement(3),
+// 			},
+// 		},
+// 		len: 3,
+// 	}
+// 	btree.traverseSetParent()
+// 	return btree
+// }
 
-func TestFind(t *testing.T) {
-	btree := newBtree()
-	if !btree.Find(IntElement(1)) {
-		t.Fatal("unexpected: btree.Find(1) is false")
-	}
-	if !btree.Find(IntElement(2)) {
-		t.Fatal("unexpected: btree.Find(2) is false")
-	}
-	if !btree.Find(IntElement(3)) {
-		t.Fatal("unexpected: btree.Find(3) is false")
-	}
-	if btree.Find(IntElement(4)) {
-		t.Fatal("unexpected: btree.Find(4) is true")
-	}
-}
+// func TestFind(t *testing.T) {
+// 	btree := newBtree()
+// 	if !btree.Find(IntElement(1)) {
+// 		t.Fatal("unexpected: btree.Find(1) is false")
+// 	}
+// 	if !btree.Find(IntElement(2)) {
+// 		t.Fatal("unexpected: btree.Find(2) is false")
+// 	}
+// 	if !btree.Find(IntElement(3)) {
+// 		t.Fatal("unexpected: btree.Find(3) is false")
+// 	}
+// 	if btree.Find(IntElement(4)) {
+// 		t.Fatal("unexpected: btree.Find(4) is true")
+// 	}
+// }
 
-func TestPrint(t *testing.T) {
-	btree := newBtree()
-	btree.recursivePrint()
-	btree.traversePrint()
-}
+// func TestPrint(t *testing.T) {
+// 	btree := newBtree()
+// 	btree.recursivePrint()
+// 	btree.traversePrint()
+// }
 
 func TestAdd(t *testing.T) {
 	var btree Btree
