@@ -1,6 +1,7 @@
 package btree
 
 import (
+	"errors"
 	"fmt"
 	"log"
 )
@@ -165,12 +166,12 @@ func (btree *Btree) findNode(v Element) *Node {
 	}
 }
 
-func (btree *Btree) Find(v Element) bool {
+func (btree *Btree) Find(v Element) (*Node, error) {
 	if btree == nil {
-		log.Fatal("assertion failed (btree.root == nil)")
+		return nil, errors.New("assertion failed (btree.root == nil)")
 	}
 	node := btree.findNode(v)
-	return node != nil
+	return node, nil
 }
 
 // Add

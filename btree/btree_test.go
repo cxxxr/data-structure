@@ -13,8 +13,8 @@ func TestAddFind(t *testing.T) {
 		if !btree.Add(v) {
 			t.Fatalf("!btree.Add(%v)", v)
 		}
-		if !btree.Find(v) {
-			t.Fatalf("!btree.Find(%v)", v)
+		if n, err := btree.Find(v); !(n != nil && err == nil) {
+			t.Fatalf("expected btree.Find(%v) to be (!nil, nil)", v)
 		}
 		if btree.Len() != i+1 {
 			t.Fatalf("btree.Len() != %d\n", i+1)
@@ -27,8 +27,8 @@ func TestAddFind(t *testing.T) {
 		}
 	}
 
-	if btree.Find(IntElement(100)) {
-		t.Fatal("btree.Find(100)")
+	if n, err := btree.Find(IntElement(100)); !(n == nil && err == nil) {
+		t.Fatalf("expected btree.Find(100) to be (nil, nil)")
 	}
 }
 
