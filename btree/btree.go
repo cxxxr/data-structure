@@ -250,7 +250,7 @@ func (node *Node) remove(btree *Btree) {
 
 func (btree *Btree) Remove(v Element) (bool, error) {
 	if btree == nil {
-		return false, errors.New("assertion failed (btree.root == nil)")
+		return false, errors.New("btree is nil")
 	}
 
 	node := btree.findNode(v)
