@@ -1,12 +1,7 @@
 package btree
 
 import (
-	"fmt"
-	"io"
 	"log"
-	"math/rand"
-	"os"
-	"os/exec"
 )
 
 // Node
@@ -274,60 +269,3 @@ func (btree *Btree) traverseSetParent() {
 
 	btree.root.traverseSetParent(nil)
 }
-
-// graphviz
-func (node *Node) dot(output io.StringWriter) {
-	if node.left != nil {
-		output.WriteString(fmt.Sprintf("%d -> %d;\n", node.value, node.left.value))
-		node.left.dot(output)
-	}
-	if node.right != nil {
-		output.WriteString(fmt.Sprintf("%d -> %d;\n", node.value, node.right.value))
-		node.right.dot(output)
-	}
-}
-
-func (btree *Btree) PrintDot(output io.StringWriter) {
-	output.WriteString("digraph btree {\n")
-	btree.root.dot(output)
-	output.WriteString("}\n")
-}
-
-func (btree *Btree) PrintDotAndOpenImage(baseName string) {
-	dotName := fmt.Sprintf("%s.dot", baseName)
-	pngName := fmt.Sprintf("%s.png", baseName)
-
-	output, err := os.Create(dotName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer output.Close()
-
-	btree.PrintDot(output)
-
-	if err := exec.Command("dot", "-T", "png", dotName, "-o", pngName).Run(); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := exec.Command("open", pngName).Run(); err != nil {
-		log.Fatal(err)
-	}
-}
-
-// main
-func NewRandomValues() []int {
-	values := make([]int, 10)
-	for i := 0; i < 10; i++ {
-		values[i] = i
-	}
-
-	rand.Shuffle(10, func(i, j int) {
-		tmp := values[i]
-		values[i] = values[j]
-		values[j] = tmp
-	})
-	return values
-}
-
-/*
-*/
