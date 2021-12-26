@@ -26,10 +26,6 @@ func newNode(parent *Node, value Element) *Node {
 	return n
 }
 
-func (n *Node) initEdges() {
-	n.edges = make([]*Node, 3, 3)
-}
-
 func (n *Node) Parent() *Node{
 	return n.edges[0]
 }
@@ -265,49 +261,6 @@ func (btree *Btree) Remove(v Element) bool {
 	btree.len--
 
 	return true
-}
-
-// recursivePrint
-func (current *Node) recursivePrint() {
-	log.Printf("%d\n", current.value)
-	if current.Left() != nil {
-		current.Left().recursivePrint()
-	}
-	if current.Right() != nil {
-		current.Right().recursivePrint()
-	}
-}
-
-func (btree *Btree) recursivePrint() {
-	logPrefix := log.Prefix()
-	defer log.SetPrefix(logPrefix)
-	log.SetPrefix("recursivePrint: ")
-
-	btree.root.recursivePrint()
-}
-
-// traverseSetParent
-func (current *Node) traverseSetParent(parent *Node) {
-	if current == nil {
-		return
-	}
-
-	current.initEdges()
-	current.setParent(parent)
-	if current.Left() != nil {
-		current.Left().traverseSetParent(current)
-	}
-	if current.Right() != nil {
-		current.Right().traverseSetParent(current)
-	}
-}
-
-func (btree *Btree) traverseSetParent() {
-	logPrefix := log.Prefix()
-	defer log.SetPrefix(logPrefix)
-	log.SetPrefix("traverseSetParent: ")
-
-	btree.root.traverseSetParent(nil)
 }
 
 // IntElement
