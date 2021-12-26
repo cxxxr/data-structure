@@ -13,10 +13,26 @@ type Element interface{
 
 // Node
 type Node struct {
+	parent *Node
 	left   *Node
 	right  *Node
-	parent *Node
 	value  Element
+}
+
+func (n *Node) Left() *Node {
+	return n.left
+}
+
+func (n *Node) Right() *Node {
+	return n.right
+}
+
+func (n *Node) setLeft(v *Node) {
+	n.left = v
+}
+
+func (n *Node) setRight(v *Node) {
+	n.right = v
 }
 
 // Btree
@@ -38,8 +54,8 @@ func next(prev, current *Node) (*Node, *Node) {
 
 		switch prev {
 		case nil:
-			return current.left
-		case current.left:
+			return current.Left()
+		case current.Left():
 			if current.right != nil {
 				return current.right
 			} else {
@@ -52,8 +68,8 @@ func next(prev, current *Node) (*Node, *Node) {
 				return nil
 			}
 		case current.parent:
-			if current.left != nil {
-				return current.left
+			if current.Left() != nil {
+				return current.Left()
 			} else if current.right != nil {
 				return current.right
 			} else {
@@ -97,10 +113,10 @@ func (btree *Btree) findLastNode(v Element) *Node {
 		}
 
 		if v.Lt(current.value) {
-			if current.left == nil {
+			if current.Left() == nil {
 				return current
 			}
-			current = current.left
+			current = current.Left()
 		} else {
 			if current.right == nil {
 				return current
@@ -124,10 +140,10 @@ func (btree *Btree) findNode(v Element) *Node {
 		}
 
 		if v.Lt(current.value) {
-			if current.left == nil {
+			if current.Left() == nil {
 				return nil
 			}
-			current = current.left
+			current = current.Left()
 		} else {
 			if current.right == nil {
 				return nil
@@ -158,9 +174,9 @@ func (btree *Btree) Add(v Element) bool {
 	case node == nil:
 		btree.root = newNode
 	case v.Lt(node.value):
-		node.left = newNode
+		node.setLeft(newNode)
 	case node.value.Lt(v):
-		node.right = newNode
+		node.setRight(newNode)
 	default:
 		// ここに到達するとnewNodeは捨てられる
 		return false
@@ -172,15 +188,15 @@ func (btree *Btree) Add(v Element) bool {
 
 // Remove
 func (node *Node) splice(btree *Btree) {
-	if node.left != nil && node.right != nil {
+	if node.Left() != nil && node.right != nil {
 		log.Fatal("unreachable")
 	}
 
 	var c *Node
-	if node.left == nil {
+	if node.Left() == nil {
 		c = node.right
 	} else {
-		c = node.left
+		c = node.Left()
 	}
 
 	var p *Node
@@ -191,10 +207,10 @@ func (node *Node) splice(btree *Btree) {
 	} else {
 		p = node.parent
 		switch node {
-		case p.left:
-			p.left = c
+		case p.Left():
+			p.setLeft(c)
 		case p.right:
-			p.right = c
+			p.setRight(c)
 		default:
 			log.Fatal("unreachable")
 		}
@@ -205,14 +221,14 @@ func (node *Node) splice(btree *Btree) {
 }
 
 func (node *Node) remove(btree *Btree) {
-	if node.left == nil || node.right == nil {
+	if node.Left() == nil || node.right == nil {
 		node.splice(btree)
 		return
 	}
 
 	alt := node.right
-	for alt.left != nil {
-		alt = alt.left
+	for alt.Left() != nil {
+		alt = alt.Left()
 	}
 
 	node.value = alt.value
@@ -238,8 +254,8 @@ func (btree *Btree) Remove(v Element) bool {
 // recursivePrint
 func (current *Node) recursivePrint() {
 	log.Printf("%d\n", current.value)
-	if current.left != nil {
-		current.left.recursivePrint()
+	if current.Left() != nil {
+		current.Left().recursivePrint()
 	}
 	if current.right != nil {
 		current.right.recursivePrint()
@@ -261,8 +277,8 @@ func (current *Node) traverseSetParent(parent *Node) {
 	}
 
 	current.parent = parent
-	if current.left != nil {
-		current.left.traverseSetParent(current)
+	if current.Left() != nil {
+		current.Left().traverseSetParent(current)
 	}
 	if current.right != nil {
 		current.right.traverseSetParent(current)
