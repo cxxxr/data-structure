@@ -166,6 +166,9 @@ func (btree *Btree) findNode(v Element) *Node {
 }
 
 func (btree *Btree) Find(v Element) bool {
+	if btree == nil {
+		log.Fatal("assertion failed (btree.root == nil)")
+	}
 	node := btree.findNode(v)
 	return node != nil
 }
