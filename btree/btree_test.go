@@ -8,7 +8,7 @@ import (
 
 func TestAddFind(t *testing.T) {
 	var btree Btree
-	values := []IntElement{1, 7, 4, 0, 9, 2, 3, 5, 8, 6}
+	values := []Int{1, 7, 4, 0, 9, 2, 3, 5, 8, 6}
 	for i, v := range values {
 		if n, err := btree.Add(v); !(n != nil && err == nil) {
 			t.Fatalf("expected btree.Add(%v) to be (!nil, nil)", v)
@@ -27,14 +27,14 @@ func TestAddFind(t *testing.T) {
 		}
 	}
 
-	if n, err := btree.Find(IntElement(100)); !(n == nil && err == nil) {
+	if n, err := btree.Find(Int(100)); !(n == nil && err == nil) {
 		t.Fatalf("expected btree.Find(100) to be (nil, nil)")
 	}
 }
 
 func TestFindNil(t *testing.T) {
 	var btree *Btree
-	n, err := btree.Find(IntElement(1))
+	n, err := btree.Find(Int(1))
 	if !(n == nil && err != nil) {
 		t.Fatal("at btree == nil, Find was expected to be (nil, !nil)")
 	}
@@ -42,7 +42,7 @@ func TestFindNil(t *testing.T) {
 
 func TestAddNil(t *testing.T) {
 	var btree *Btree
-	n, err := btree.Add(IntElement(1))
+	n, err := btree.Add(Int(1))
 	if !(n == nil && err != nil) {
 		t.Fatal("at btree == nil, Add was expected to be (nil, !nil)")
 	}
@@ -60,7 +60,7 @@ func genDotText(graph [][]int) string {
 	return b.String()
 }
 
-func genTestingBtree(values []IntElement) *Btree {
+func genTestingBtree(values []Int) *Btree {
 	var btree Btree
 	for _, v := range values {
 		btree.Add(v)
@@ -85,10 +85,10 @@ func testBtreeShape(t *testing.T, btree *Btree, expected string) {
 }
 
 func TestRemove(t *testing.T) {
-	values := []IntElement{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
+	values := []Int{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
 	btree := genTestingBtree(values)
 
-	if b, err := btree.Remove(IntElement(6)); !(b && err == nil) {
+	if b, err := btree.Remove(Int(6)); !(b && err == nil) {
 		t.Fatal("expected to be (true, nil)")
 	}
 	expected := genDotText([][]int{
@@ -105,7 +105,7 @@ func TestRemove(t *testing.T) {
 	})
 	testBtreeShape(t, btree, expected)
 
-	if b, err := btree.Remove(IntElement(9)); !(b && err == nil) {
+	if b, err := btree.Remove(Int(9)); !(b && err == nil) {
 		t.Fatal("expected to be (true, nil)")
 	}
 	expected = genDotText([][]int{
@@ -121,7 +121,7 @@ func TestRemove(t *testing.T) {
 	})
 	testBtreeShape(t, btree, expected)
 
-	if b, err := btree.Remove(IntElement(11)); !(b && err == nil) {
+	if b, err := btree.Remove(Int(11)); !(b && err == nil) {
 		t.Fatal("expected to be (true, nil)")
 	}
 	expected = genDotText([][]int{
@@ -136,7 +136,7 @@ func TestRemove(t *testing.T) {
 	})
 	testBtreeShape(t, btree, expected)
 
-	if b, err := btree.Remove(IntElement(7)); !(b && err == nil) {
+	if b, err := btree.Remove(Int(7)); !(b && err == nil) {
 		t.Fatal("expected to be (true, nil)")
 	}
 	expected = genDotText([][]int{
@@ -150,8 +150,8 @@ func TestRemove(t *testing.T) {
 	})
 	testBtreeShape(t, btree, expected)
 
-	btree = genTestingBtree([]IntElement{1, 2, 3})
-	btree.Remove(IntElement(1))
+	btree = genTestingBtree([]Int{1, 2, 3})
+	btree.Remove(Int(1))
 	expected = genDotText([][]int{
 		{2, 3},
 	})
@@ -160,19 +160,19 @@ func TestRemove(t *testing.T) {
 
 func TestRemoveNil(t *testing.T) {
 	var btree *Btree
-	b, err := btree.Remove(IntElement(1))
+	b, err := btree.Remove(Int(1))
 	if !(!b && err != nil) {
 		t.Fatal("at btree == nil, Remove was expected to be (nil, !nil)")
 	}
 }
 
 func TestTraverse(t *testing.T) {
-	values := []IntElement{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
+	values := []Int{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
 	btree := genTestingBtree(values)
 
 	actual := make([]int, 0)
-	btree.Traverse(func (n *Node) {
-		actual = append(actual, int(n.value.(IntElement)))
+	btree.Traverse(func(n *Node) {
+		actual = append(actual, int(n.value.(Int)))
 	})
 
 	if len(actual) != len(values) {

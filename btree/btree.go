@@ -264,36 +264,36 @@ func (btree *Btree) Remove(v Element) (bool, error) {
 	return true, nil
 }
 
-// IntElement
-type IntElement int
+// Int
+type Int int
 
-func (lhs IntElement) Eq(rhs Element) bool {
-	v := rhs.(IntElement)
+func (lhs Int) Eq(rhs Element) bool {
+	v := rhs.(Int)
 	return int(lhs) == int(v)
 }
 
-func (lhs IntElement) Lt(rhs Element) bool {
-	v := rhs.(IntElement)
+func (lhs Int) Lt(rhs Element) bool {
+	v := rhs.(Int)
 	return int(lhs) < int(v)
 }
 
-func (e IntElement) String() string {
+func (e Int) String() string {
 	return fmt.Sprintf("%d", int(e))
 }
 
-// RuneElement
-type RuneElement rune
+// Rune
+type Rune rune
 
-func (lhs RuneElement) Eq(rhs Element) bool {
-	v := rhs.(RuneElement)
+func (lhs Rune) Eq(rhs Element) bool {
+	v := rhs.(Rune)
 	return rune(lhs) == rune(v)
 }
 
-func (lhs RuneElement) Lt(rhs Element) bool {
-	v := rhs.(RuneElement)
+func (lhs Rune) Lt(rhs Element) bool {
+	v := rhs.(Rune)
 	return rune(lhs) < rune(v)
 }
 
-func (e RuneElement) String() string {
+func (e Rune) String() string {
 	return string(rune(e))
 }
