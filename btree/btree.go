@@ -71,7 +71,7 @@ func (btree *Btree) Len() int {
 
 // traverse
 func next(prev, current *Node) (*Node, *Node) {
-	nextNode := func(current *Node) *Node {
+	nextNode := func() *Node {
 		if current == nil {
 			log.Fatal("assertion failed! (current == nil)")
 		}
@@ -103,7 +103,7 @@ func next(prev, current *Node) (*Node, *Node) {
 		}
 	}
 
-	next := nextNode(current)
+	next := nextNode()
 	return current, next
 }
 
