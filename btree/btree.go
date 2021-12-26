@@ -194,7 +194,7 @@ func (btree *Btree) Add(v Element) bool {
 		return false
 	}
 
-	btree.len += 1
+	btree.len++
 	return true
 }
 
