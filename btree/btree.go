@@ -102,10 +102,6 @@ func nextNode(prev, current *Node) (*Node, *Node) {
 }
 
 func (btree *Btree) Traverse(fn func(*Node)) {
-	logPrefix := log.Prefix()
-	defer log.SetPrefix(logPrefix)
-	log.SetPrefix("traversePrint: ")
-
 	current := btree.root
 	var prev *Node
 
