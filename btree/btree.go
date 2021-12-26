@@ -68,8 +68,6 @@ func next(prev, current *Node) (*Node, *Node) {
 		}
 
 		switch prev {
-		case nil:
-			return current.Left()
 		case current.Left():
 			if current.Right() != nil {
 				return current.Right()
@@ -106,10 +104,10 @@ func (btree *Btree) Traverse(fn func(*Node)) {
 	log.SetPrefix("traversePrint: ")
 
 	current := btree.root
-	var prev *Node
+	prev := current.Parent() // rootのparentなのでnilになる
 
 	for current != nil {
-		if prev == nil || prev == current.Parent() {
+		if prev == current.Parent() {
 			fn(current)
 		}
 		prev, current = next(prev, current)
