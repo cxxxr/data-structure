@@ -84,13 +84,10 @@ func relativeEdgeIndex(prev, current *Node) edgeIndex {
 }
 
 func nextNode(prev, current *Node) (*Node, *Node) {
-	// 0: parent
-	// 1: left
-	// 2: right
 	// 以下の順でnilではないedgeを探す
-	// 0 -> 1 -> 2 -> 0
-	// 1 -> 2 -> 0
-	// 2 -> 0
+	// parent : left -> right -> parent
+	// left   : right -> parent
+	// right  : parent
 
 	edge := relativeEdgeIndex(prev, current)
 	for {
@@ -110,7 +107,7 @@ func (btree *Btree) Traverse(fn func(*Node)) {
 	log.SetPrefix("traversePrint: ")
 
 	current := btree.root
-	prev := current.Parent() // rootのparentなのでnilになる
+	var prev *Node
 
 	for current != nil {
 		if prev == current.Parent() {
