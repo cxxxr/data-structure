@@ -10,8 +10,8 @@ func TestAddFind(t *testing.T) {
 	var btree Btree
 	values := []IntElement{1, 7, 4, 0, 9, 2, 3, 5, 8, 6}
 	for i, v := range values {
-		if !btree.Add(v) {
-			t.Fatalf("!btree.Add(%v)", v)
+		if n, err := btree.Add(v); !(n != nil && err == nil) {
+			t.Fatalf("expected btree.Add(%v) to be (!nil, nil)", v)
 		}
 		if n, err := btree.Find(v); !(n != nil && err == nil) {
 			t.Fatalf("expected btree.Find(%v) to be (!nil, nil)", v)
@@ -22,13 +22,21 @@ func TestAddFind(t *testing.T) {
 	}
 
 	for _, v := range values {
-		if btree.Add(v) {
-			t.Fatalf("btree.Add(%v)", v)
+		if n, err := btree.Add(v); !(n == nil && err == nil) {
+			t.Fatalf("expected btree.Add(%v) to be (nil, nil)", v)
 		}
 	}
 
 	if n, err := btree.Find(IntElement(100)); !(n == nil && err == nil) {
 		t.Fatalf("expected btree.Find(100) to be (nil, nil)")
+	}
+}
+
+func TestFindNil(t *testing.T) {
+	var btree *Btree
+	n, err := btree.Find(IntElement(1))
+	if !(n == nil && err != nil) {
+		t.Fatal("at btree == nil, Find was expected to be (nil, !nil)")
 	}
 }
 

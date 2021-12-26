@@ -168,16 +168,16 @@ func (btree *Btree) findNode(v Element) *Node {
 
 func (btree *Btree) Find(v Element) (*Node, error) {
 	if btree == nil {
-		return nil, errors.New("assertion failed (btree.root == nil)")
+		return nil, errors.New("btree is nil")
 	}
 	node := btree.findNode(v)
 	return node, nil
 }
 
 // Add
-func (btree *Btree) Add(v Element) bool {
+func (btree *Btree) Add(v Element) (*Node, error) {
 	if btree == nil {
-		log.Fatal("assertion failed (btree.root == nil)")
+		return nil, errors.New("btree is nil")
 	}
 
 	node := btree.findLastNode(v)
@@ -191,12 +191,12 @@ func (btree *Btree) Add(v Element) bool {
 	case node.value.Lt(v):
 		node.setRight(child)
 	default:
-		// ここに到達するとnewNodeは捨てられる
-		return false
+		// 既に要素があるとここに到達する、newNodeは捨てられる
+		return nil, nil
 	}
 
 	btree.len++
-	return true
+	return child, nil
 }
 
 // Remove
