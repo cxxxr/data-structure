@@ -20,6 +20,10 @@ const (
 	edgeNum
 )
 
+func nextEdge(edge edgeIndex) edgeIndex {
+	return (edge + 1) % edgeNum
+}
+
 // Node
 type Node struct {
 	edges []*Node
@@ -70,41 +74,34 @@ func (btree *Btree) Len() int {
 }
 
 // traverse
-func next(prev, current *Node) (*Node, *Node) {
-	nextNode := func() *Node {
-		if current == nil {
-			log.Fatal("assertion failed! (current == nil)")
-		}
-
-		switch prev {
-		case current.Left():
-			if current.Right() != nil {
-				return current.Right()
-			} else {
-				return current.Parent()
-			}
-		case current.Right():
-			if current.Parent() != nil {
-				return current.Parent()
-			} else {
-				return nil
-			}
-		case current.Parent():
-			if current.Left() != nil {
-				return current.Left()
-			} else if current.Right() != nil {
-				return current.Right()
-			} else {
-				return current.Parent()
-			}
-		default:
-			log.Fatal("unreachable code!")
-			return nil
+func relativeEdgeIndex(prev, current *Node) edgeIndex {
+	for edge := edgeIndexParent; edge < edgeNum; edge++ {
+		if current.edges[edge] == prev {
+			return edge
 		}
 	}
+	panic("unreachable code")
+}
 
-	next := nextNode()
-	return current, next
+func nextNode(prev, current *Node) (*Node, *Node) {
+	// 0: parent
+	// 1: left
+	// 2: right
+	// 以下の順でnilではないedgeを探す
+	// 0 -> 1 -> 2 -> 0
+	// 1 -> 2 -> 0
+	// 2 -> 0
+
+	edge := relativeEdgeIndex(prev, current)
+	for {
+		edge = nextEdge(edge)
+		if n := current.edges[edge]; n != nil {
+			return current, n
+		}
+		if edge == edgeIndexParent {
+			return current, nil
+		}
+	}
 }
 
 func (btree *Btree) Traverse(fn func(*Node)) {
@@ -119,7 +116,7 @@ func (btree *Btree) Traverse(fn func(*Node)) {
 		if prev == current.Parent() {
 			fn(current)
 		}
-		prev, current = next(prev, current)
+		prev, current = nextNode(prev, current)
 	}
 }
 
