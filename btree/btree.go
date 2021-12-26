@@ -248,20 +248,20 @@ func (node *Node) remove(btree *Btree) {
 	alt.splice(btree)
 }
 
-func (btree *Btree) Remove(v Element) bool {
+func (btree *Btree) Remove(v Element) (bool, error) {
 	if btree == nil {
-		log.Fatal("assertion failed (btree.root == nil)")
+		return false, errors.New("assertion failed (btree.root == nil)")
 	}
 
 	node := btree.findNode(v)
 	if node == nil {
-		return false
+		return false, nil
 	}
 
 	node.remove(btree)
 	btree.len--
 
-	return true
+	return true, nil
 }
 
 // IntElement

@@ -40,6 +40,14 @@ func TestFindNil(t *testing.T) {
 	}
 }
 
+func TestAddNil(t *testing.T) {
+	var btree *Btree
+	n, err := btree.Add(IntElement(1))
+	if !(n == nil && err != nil) {
+		t.Fatal("at btree == nil, Find was expected to be (nil, !nil)")
+	}
+}
+
 func genDotText(graph [][]int) string {
 	var b strings.Builder
 	b.WriteString("digraph btree {\n")
@@ -77,13 +85,13 @@ func testBtreeShape(t *testing.T, btree *Btree, expected string) {
 }
 
 func TestRemove(t *testing.T) {
-	var expected string
-
 	values := []IntElement{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
 	btree := genTestingBtree(values)
 
-	btree.Remove(IntElement(6))
-	expected = genDotText([][]int{
+	if b, err := btree.Remove(IntElement(6)); !(b && err == nil) {
+		t.Fatal("expected to be (true, nil)")
+	}
+	expected := genDotText([][]int{
 		{7, 3},
 		{3, 1},
 		{3, 5},
@@ -97,7 +105,9 @@ func TestRemove(t *testing.T) {
 	})
 	testBtreeShape(t, btree, expected)
 
-	btree.Remove(IntElement(9))
+	if b, err := btree.Remove(IntElement(9)); !(b && err == nil) {
+		t.Fatal("expected to be (true, nil)")
+	}
 	expected = genDotText([][]int{
 		{7, 3},
 		{3, 1},
@@ -111,7 +121,9 @@ func TestRemove(t *testing.T) {
 	})
 	testBtreeShape(t, btree, expected)
 
-	btree.Remove(IntElement(11))
+	if b, err := btree.Remove(IntElement(11)); !(b && err == nil) {
+		t.Fatal("expected to be (true, nil)")
+	}
 	expected = genDotText([][]int{
 		{7, 3},
 		{3, 1},
@@ -124,7 +136,9 @@ func TestRemove(t *testing.T) {
 	})
 	testBtreeShape(t, btree, expected)
 
-	btree.Remove(IntElement(7))
+	if b, err := btree.Remove(IntElement(7)); !(b && err == nil) {
+		t.Fatal("expected to be (true, nil)")
+	}
 	expected = genDotText([][]int{
 		{8, 3},
 		{3, 1},
@@ -142,6 +156,14 @@ func TestRemove(t *testing.T) {
 		{2, 3},
 	})
 	testBtreeShape(t, btree, expected)
+}
+
+func TestRemoveNil(t *testing.T) {
+	var btree *Btree
+	b, err := btree.Remove(IntElement(1))
+	if !(!b && err != nil) {
+		t.Fatal("at btree == nil, Find was expected to be (nil, !nil)")
+	}
 }
 
 func TestTraverse(t *testing.T) {
