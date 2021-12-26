@@ -44,7 +44,7 @@ func TestAddNil(t *testing.T) {
 	var btree *Btree
 	n, err := btree.Add(IntElement(1))
 	if !(n == nil && err != nil) {
-		t.Fatal("at btree == nil, Find was expected to be (nil, !nil)")
+		t.Fatal("at btree == nil, Add was expected to be (nil, !nil)")
 	}
 }
 
@@ -162,7 +162,7 @@ func TestRemoveNil(t *testing.T) {
 	var btree *Btree
 	b, err := btree.Remove(IntElement(1))
 	if !(!b && err != nil) {
-		t.Fatal("at btree == nil, Find was expected to be (nil, !nil)")
+		t.Fatal("at btree == nil, Remove was expected to be (nil, !nil)")
 	}
 }
 
