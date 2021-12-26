@@ -1,4 +1,4 @@
-package main
+package btree
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
-	"strings"
 )
 
 // Node
@@ -288,7 +287,7 @@ func (node *Node) dot(output io.StringWriter) {
 	}
 }
 
-func (btree *Btree) printDot(output io.StringWriter) {
+func (btree *Btree) PrintDot(output io.StringWriter) {
 	output.WriteString("digraph btree {\n")
 	btree.root.dot(output)
 	output.WriteString("}\n")
@@ -304,7 +303,7 @@ func (btree *Btree) PrintDotAndOpenImage(baseName string) {
 	}
 	defer output.Close()
 
-	btree.printDot(output)
+	btree.PrintDot(output)
 
 	if err := exec.Command("dot", "-T", "png", dotName, "-o", pngName).Run(); err != nil {
 		log.Fatal(err)
@@ -330,25 +329,5 @@ func NewRandomValues() []int {
 	return values
 }
 
-func main() {
-	var btree *Btree
-
-	values := []int{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
-
-	// values := []int{1, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14}
-	// values := []int{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
-
-	for _, v := range values {
-		btree.Add(v)
-	}
-
-	var b strings.Builder
-	btree.printDot(&b)
-	fmt.Println(b.String())
-
-	// btree.PrintDotAndOpenImage("DEBUG-1")
-	// btree.Remove(6)
-	// btree.PrintDotAndOpenImage("DEBUG-2")
-	// btree.Remove(9)
-	// btree.PrintDotAndOpenImage("DEBUG-3")
-}
+/*
+*/

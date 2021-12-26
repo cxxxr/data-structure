@@ -1,4 +1,4 @@
-package main
+package btree
 
 import (
 	"fmt"
@@ -89,7 +89,7 @@ func genTestingBtree(values []int) *Btree {
 
 func toDot(btree *Btree) string {
 	var builder strings.Builder
-	btree.printDot(&builder)
+	btree.PrintDot(&builder)
 	return builder.String()
 }
 
