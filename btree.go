@@ -25,7 +25,6 @@ func nextEdge(edge edgeIndex) edgeIndex {
 	return (edge + 1) % edgeNum
 }
 
-// Node
 type Node struct {
 	edges []*Node
 	value Element
@@ -64,7 +63,6 @@ func (n *Node) setRight(v *Node) {
 	n.edges[edgeIndexRight] = v
 }
 
-// Btree
 type Btree struct {
 	root *Node
 	len  int
@@ -74,7 +72,6 @@ func (btree *Btree) Len() int {
 	return btree.len
 }
 
-// traverse
 func relativeEdgeIndex(prev, current *Node) edgeIndex {
 	for edge := edgeIndexParent; edge < edgeNum; edge++ {
 		if current.edges[edge] == prev {
@@ -114,7 +111,6 @@ func (btree *Btree) Traverse(fn func(*Node)) {
 	}
 }
 
-// Find
 func (btree *Btree) findLastNode(v Element) *Node {
 	current := btree.root
 	var prev *Node
@@ -174,7 +170,6 @@ func (btree *Btree) Find(v Element) (*Node, error) {
 	return node, nil
 }
 
-// Add
 func (btree *Btree) Add(v Element) (*Node, error) {
 	if btree == nil {
 		return nil, errors.New("btree is nil")
@@ -199,7 +194,6 @@ func (btree *Btree) Add(v Element) (*Node, error) {
 	return child, nil
 }
 
-// Remove
 func (node *Node) splice(btree *Btree) {
 	if node.Left() != nil && node.Right() != nil {
 		log.Fatal("unreachable")
@@ -264,7 +258,6 @@ func (btree *Btree) Remove(v Element) (bool, error) {
 	return true, nil
 }
 
-// Int
 type Int int
 
 func (lhs Int) Eq(rhs Element) bool {
@@ -281,7 +274,6 @@ func (e Int) String() string {
 	return fmt.Sprintf("%d", int(e))
 }
 
-// Rune
 type Rune rune
 
 func (lhs Rune) Eq(rhs Element) bool {
