@@ -63,6 +63,10 @@ func (n *Node) setRight(v *Node) {
 	n.edges[edgeIndexRight] = v
 }
 
+func (n *Node) children() []*Node {
+	return n.edges[1:]
+}
+
 type Btree struct {
 	root *Node
 	len  int
@@ -256,6 +260,29 @@ func (btree *Btree) Remove(v Element) (bool, error) {
 	btree.len--
 
 	return true, nil
+}
+
+func (node *Node) height() int {
+	if node == nil {
+		return 0
+	}
+
+	max := 0
+	for _, n := range node.children() {
+		v := n.height()
+		if max < v {
+			max = v
+		}
+	}
+	return max
+}
+
+func (btree *Btree) Height() (int, error) {
+	if btree == nil {
+		return 0, errors.New("btree is nil")
+	}
+
+	return btree.root.height(), nil
 }
 
 type Int int

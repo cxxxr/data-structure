@@ -186,3 +186,21 @@ func TestTraverse(t *testing.T) {
 		}
 	}
 }
+
+func TestHeight(t *testing.T) {
+	var btree *Btree
+	if n, err := btree.Height(); !(n == 0 && err != nil) {
+		t.Fatal("at btree == nil, Height was expected to be (0, !nil)")
+	}
+
+	btree = &Btree{}
+	if n, err := btree.Height(); !(n == 0 && err == nil) {
+		t.Fatal("expected btree.Height() to be 0")
+	}
+
+	values := []Int{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
+	btree = genTestingBtree(values)
+	if height, err := btree.Height(); height == 3 && err == nil {
+		t.Fatal("expected btree.Height() to be 3")
+	}
+}
