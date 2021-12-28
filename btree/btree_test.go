@@ -200,7 +200,7 @@ func TestHeight(t *testing.T) {
 
 	values := []Int{7, 3, 11, 1, 5, 9, 13, 4, 6, 8, 12, 14}
 	btree = genTestingBtree(values)
-	if height, err := btree.Height(); height == 3 && err == nil {
-		t.Fatal("expected btree.Height() to be 3")
+	if height, err := btree.Height(); !(height == 4 && err == nil) {
+		t.Fatal("expected btree.Height() to be 4")
 	}
 }

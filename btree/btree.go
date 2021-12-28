@@ -274,7 +274,7 @@ func (node *Node) height() int {
 			max = v
 		}
 	}
-	return max
+	return 1 + max
 }
 
 func (btree *Btree) Height() (int, error) {
