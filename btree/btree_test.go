@@ -204,3 +204,27 @@ func TestHeight(t *testing.T) {
 		t.Fatal("expected btree.Height() to be 4")
 	}
 }
+
+func testBalanced(t *testing.T, btree *Btree, expected bool) {
+	if balanced, err := btree.Balanced(); !(balanced == expected && err == nil) {
+		t.Fatalf("expected btree.Balanced() == %v", expected)
+	}
+}
+
+func TestBalanced(t *testing.T) {
+	var btree *Btree
+
+	if balanced, err := btree.Balanced(); !(balanced == false && err != nil) {
+		t.Fatal("at btree == nil, Balanced was expected to be (false, !nil)")
+	}
+
+	btree = &Btree{}
+	btree.Add(Int(1))
+	testBalanced(t, btree, true)
+
+	btree.Add(Int(2))
+	testBalanced(t, btree, true)
+
+	btree.Add(Int(3))
+	testBalanced(t, btree, false)
+}

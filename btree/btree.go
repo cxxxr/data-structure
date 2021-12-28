@@ -285,6 +285,21 @@ func (btree *Btree) Height() (int, error) {
 	return btree.root.height(), nil
 }
 
+func (btree *Btree) Balanced() (bool, error) {
+	if btree == nil {
+		return false, errors.New("btree is nil")
+	}
+
+	left := btree.root.Left()
+	right := btree.root.Right()
+	diff := left.height() - right.height()
+	if 0 < diff {
+		return diff < 2, nil
+	} else {
+		return -diff < 2, nil
+	}
+}
+
 type Int int
 
 func (lhs Int) Eq(rhs Element) bool {
