@@ -8,7 +8,7 @@ import (
 	"os/exec"
 )
 
-func (node *Node) dot(output io.StringWriter) {
+func (node *BinaryNode) dot(output io.StringWriter) {
 	if node.Left() != nil {
 		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.value, node.Left().value))
 		node.Left().dot(output)

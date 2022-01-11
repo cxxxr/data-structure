@@ -18,50 +18,50 @@ func nextEdge(edge edgeIndex) edgeIndex {
 	return (edge + 1) % edgeNum
 }
 
-type Node struct {
-	edges []*Node
+type BinaryNode struct {
+	edges []*BinaryNode
 	value Element
 }
 
-func newNode(parent *Node, value Element) *Node {
-	n := &Node{
+func newNode(parent *BinaryNode, value Element) *BinaryNode {
+	n := &BinaryNode{
 		value: value,
-		edges: make([]*Node, edgeNum),
+		edges: make([]*BinaryNode, edgeNum),
 	}
 	n.edges[0] = parent
 	return n
 }
 
-func (n *Node) Parent() *Node {
+func (n *BinaryNode) Parent() *BinaryNode {
 	return n.edges[edgeIndexParent]
 }
 
-func (n *Node) Left() *Node {
+func (n *BinaryNode) Left() *BinaryNode {
 	return n.edges[edgeIndexLeft]
 }
 
-func (n *Node) Right() *Node {
+func (n *BinaryNode) Right() *BinaryNode {
 	return n.edges[edgeIndexRight]
 }
 
-func (n *Node) setParent(v *Node) {
+func (n *BinaryNode) setParent(v *BinaryNode) {
 	n.edges[edgeIndexParent] = v
 }
 
-func (n *Node) setLeft(v *Node) {
+func (n *BinaryNode) setLeft(v *BinaryNode) {
 	n.edges[edgeIndexLeft] = v
 }
 
-func (n *Node) setRight(v *Node) {
+func (n *BinaryNode) setRight(v *BinaryNode) {
 	n.edges[edgeIndexRight] = v
 }
 
-func (n *Node) children() []*Node {
+func (n *BinaryNode) children() []*BinaryNode {
 	return n.edges[1:]
 }
 
 type Btree struct {
-	root *Node
+	root *BinaryNode
 	len  int
 }
 
@@ -69,7 +69,7 @@ func (btree *Btree) Len() int {
 	return btree.len
 }
 
-func relativeEdgeIndex(prev, current *Node) edgeIndex {
+func relativeEdgeIndex(prev, current *BinaryNode) edgeIndex {
 	for edge := edgeIndexParent; edge < edgeNum; edge++ {
 		if current.edges[edge] == prev {
 			return edge
@@ -78,7 +78,7 @@ func relativeEdgeIndex(prev, current *Node) edgeIndex {
 	panic("unreachable code")
 }
 
-func nextNode(prev, current *Node) (*Node, *Node) {
+func nextNode(prev, current *BinaryNode) (*BinaryNode, *BinaryNode) {
 	// 以下の順でnilではないedgeを探す
 	// parent : left -> right -> parent
 	// left   : right -> parent
@@ -96,9 +96,9 @@ func nextNode(prev, current *Node) (*Node, *Node) {
 	}
 }
 
-func (btree *Btree) Traverse(fn func(*Node)) {
+func (btree *Btree) Traverse(fn func(*BinaryNode)) {
 	current := btree.root
-	var prev *Node
+	var prev *BinaryNode
 
 	for current != nil {
 		if prev == current.Parent() {
@@ -108,9 +108,9 @@ func (btree *Btree) Traverse(fn func(*Node)) {
 	}
 }
 
-func (btree *Btree) findLastNode(v Element) *Node {
+func (btree *Btree) findLastNode(v Element) *BinaryNode {
 	current := btree.root
-	var prev *Node
+	var prev *BinaryNode
 
 	for current != nil {
 		prev = current
@@ -134,7 +134,7 @@ func (btree *Btree) findLastNode(v Element) *Node {
 	return prev
 }
 
-func (btree *Btree) findNode(v Element) *Node {
+func (btree *Btree) findNode(v Element) *BinaryNode {
 	if btree == nil {
 		return nil
 	}
@@ -159,7 +159,7 @@ func (btree *Btree) findNode(v Element) *Node {
 	}
 }
 
-func (btree *Btree) Find(v Element) (*Node, error) {
+func (btree *Btree) Find(v Element) (*BinaryNode, error) {
 	if btree == nil {
 		return nil, errors.New("btree is nil")
 	}
@@ -167,7 +167,7 @@ func (btree *Btree) Find(v Element) (*Node, error) {
 	return node, nil
 }
 
-func (btree *Btree) Add(v Element) (*Node, error) {
+func (btree *Btree) Add(v Element) (*BinaryNode, error) {
 	if btree == nil {
 		return nil, errors.New("btree is nil")
 	}
@@ -191,19 +191,19 @@ func (btree *Btree) Add(v Element) (*Node, error) {
 	return child, nil
 }
 
-func (node *Node) splice(btree *Btree) {
+func (node *BinaryNode) splice(btree *Btree) {
 	if node.Left() != nil && node.Right() != nil {
 		log.Fatal("unreachable")
 	}
 
-	var c *Node
+	var c *BinaryNode
 	if node.Left() == nil {
 		c = node.Right()
 	} else {
 		c = node.Left()
 	}
 
-	var p *Node
+	var p *BinaryNode
 
 	if node == btree.root {
 		btree.root = c
@@ -224,7 +224,7 @@ func (node *Node) splice(btree *Btree) {
 	}
 }
 
-func (node *Node) remove(btree *Btree) {
+func (node *BinaryNode) remove(btree *Btree) {
 	if node.Left() == nil || node.Right() == nil {
 		node.splice(btree)
 		return
@@ -255,7 +255,7 @@ func (btree *Btree) Remove(v Element) (bool, error) {
 	return true, nil
 }
 
-func (node *Node) height() int {
+func (node *BinaryNode) height() int {
 	if node == nil {
 		return 0
 	}

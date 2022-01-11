@@ -171,7 +171,7 @@ func TestTraverse(t *testing.T) {
 	btree := genTestingBtree(values)
 
 	actual := make([]int, 0)
-	btree.Traverse(func(n *Node) {
+	btree.Traverse(func(n *BinaryNode) {
 		actual = append(actual, int(n.value.(Int)))
 	})
 
