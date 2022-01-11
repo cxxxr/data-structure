@@ -60,6 +60,18 @@ func (n *BinaryNode) children() []*BinaryNode {
 	return n.edges[1:]
 }
 
+func (node *BinaryNode) Left() Node {
+	return node.left()
+}
+
+func (node *BinaryNode) Right() Node {
+	return node.right()
+}
+
+func (node *BinaryNode) Value() Element {
+	return node.value
+}
+
 type Btree struct {
 	root *BinaryNode
 	len  int

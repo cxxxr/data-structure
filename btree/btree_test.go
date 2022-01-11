@@ -70,7 +70,7 @@ func genTestingBtree(values []Int) *Btree {
 
 func toDot(btree *Btree) string {
 	var builder strings.Builder
-	btree.GenDot(&builder)
+	GenDot(&builder, btree.root)
 	return builder.String()
 }
 

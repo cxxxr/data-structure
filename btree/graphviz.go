@@ -6,26 +6,27 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"reflect"
 )
 
-func (node *BinaryNode) dot(output io.StringWriter) {
-	if node.left() != nil {
-		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.value, node.left().value))
-		node.left().dot(output)
+func dot(output io.StringWriter, node Node) {
+	if !reflect.ValueOf(node.Left()).IsNil() {
+		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.Value(), node.Left().Value()))
+		dot(output, node.Left())
 	}
-	if node.right() != nil {
-		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.value, node.right().value))
-		node.right().dot(output)
+	if !reflect.ValueOf(node.Right()).IsNil() {
+		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.Value(), node.Right().Value()))
+		dot(output, node.Right())
 	}
 }
 
-func (btree *Btree) GenDot(output io.StringWriter) {
+func GenDot(output io.StringWriter, root Node) {
 	output.WriteString("digraph btree {\n")
-	btree.root.dot(output)
+	dot(output, root)
 	output.WriteString("}\n")
 }
 
-func (btree *Btree) GenDotAndOpenImage(baseName string) {
+func GenDotAndOpenImage(baseName string, root Node) {
 	dotName := fmt.Sprintf("%s.dot", baseName)
 	pngName := fmt.Sprintf("%s.png", baseName)
 
@@ -35,7 +36,7 @@ func (btree *Btree) GenDotAndOpenImage(baseName string) {
 	}
 	defer output.Close()
 
-	btree.GenDot(output)
+	GenDot(output, root)
 
 	if err := exec.Command("dot", "-T", "png", dotName, "-o", pngName).Run(); err != nil {
 		log.Fatal(err)
