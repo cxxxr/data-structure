@@ -10,13 +10,21 @@ import (
 )
 
 func dot(output io.StringWriter, node Node) {
+	hasChild := false
+
 	if !reflect.ValueOf(node.Left()).IsNil() {
 		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.Value(), node.Left().Value()))
 		dot(output, node.Left())
+		hasChild = true
 	}
 	if !reflect.ValueOf(node.Right()).IsNil() {
 		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.Value(), node.Right().Value()))
 		dot(output, node.Right())
+		hasChild = true
+	}
+
+	if !hasChild {
+		output.WriteString(fmt.Sprintf("%v;\n", node.Value()))
 	}
 }
 
