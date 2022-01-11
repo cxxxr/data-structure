@@ -26,10 +26,7 @@ func GenDot(output io.StringWriter, root Node) {
 	output.WriteString("}\n")
 }
 
-func GenDotAndOpenImage(baseName string, root Node) {
-	dotName := fmt.Sprintf("%s.dot", baseName)
-	pngName := fmt.Sprintf("%s.png", baseName)
-
+func GenDotFile(dotName string, root Node) {
 	output, err := os.Create(dotName)
 	if err != nil {
 		log.Fatal(err)
@@ -37,6 +34,13 @@ func GenDotAndOpenImage(baseName string, root Node) {
 	defer output.Close()
 
 	GenDot(output, root)
+}
+
+func GenDotAndOpenImage(baseName string, root Node) {
+	dotName := fmt.Sprintf("%s.dot", baseName)
+	pngName := fmt.Sprintf("%s.png", baseName)
+
+	GenDotFile(dotName, root)
 
 	if err := exec.Command("dot", "-T", "png", dotName, "-o", pngName).Run(); err != nil {
 		log.Fatal(err)
