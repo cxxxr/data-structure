@@ -9,13 +9,13 @@ import (
 )
 
 func (node *BinaryNode) dot(output io.StringWriter) {
-	if node.Left() != nil {
-		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.value, node.Left().value))
-		node.Left().dot(output)
+	if node.left() != nil {
+		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.value, node.left().value))
+		node.left().dot(output)
 	}
-	if node.Right() != nil {
-		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.value, node.Right().value))
-		node.Right().dot(output)
+	if node.right() != nil {
+		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.value, node.right().value))
+		node.right().dot(output)
 	}
 }
 

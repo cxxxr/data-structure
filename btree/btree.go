@@ -32,15 +32,15 @@ func newNode(parent *BinaryNode, value Element) *BinaryNode {
 	return n
 }
 
-func (n *BinaryNode) Parent() *BinaryNode {
+func (n *BinaryNode) parent() *BinaryNode {
 	return n.edges[edgeIndexParent]
 }
 
-func (n *BinaryNode) Left() *BinaryNode {
+func (n *BinaryNode) left() *BinaryNode {
 	return n.edges[edgeIndexLeft]
 }
 
-func (n *BinaryNode) Right() *BinaryNode {
+func (n *BinaryNode) right() *BinaryNode {
 	return n.edges[edgeIndexRight]
 }
 
@@ -101,7 +101,7 @@ func (btree *Btree) Traverse(fn func(*BinaryNode)) {
 	var prev *BinaryNode
 
 	for current != nil {
-		if prev == current.Parent() {
+		if prev == current.parent() {
 			fn(current)
 		}
 		prev, current = nextNode(prev, current)
@@ -119,15 +119,15 @@ func (btree *Btree) findLastNode(v Element) *BinaryNode {
 		}
 
 		if v.Lt(current.value) {
-			if current.Left() == nil {
+			if current.left() == nil {
 				return current
 			}
-			current = current.Left()
+			current = current.left()
 		} else {
-			if current.Right() == nil {
+			if current.right() == nil {
 				return current
 			}
-			current = current.Right()
+			current = current.right()
 		}
 	}
 
@@ -146,15 +146,15 @@ func (btree *Btree) findNode(v Element) *BinaryNode {
 		}
 
 		if v.Lt(current.value) {
-			if current.Left() == nil {
+			if current.left() == nil {
 				return nil
 			}
-			current = current.Left()
+			current = current.left()
 		} else {
-			if current.Right() == nil {
+			if current.right() == nil {
 				return nil
 			}
-			current = current.Right()
+			current = current.right()
 		}
 	}
 }
@@ -192,15 +192,15 @@ func (btree *Btree) Add(v Element) (*BinaryNode, error) {
 }
 
 func (node *BinaryNode) splice(btree *Btree) {
-	if node.Left() != nil && node.Right() != nil {
+	if node.left() != nil && node.right() != nil {
 		log.Fatal("unreachable")
 	}
 
 	var c *BinaryNode
-	if node.Left() == nil {
-		c = node.Right()
+	if node.left() == nil {
+		c = node.right()
 	} else {
-		c = node.Left()
+		c = node.left()
 	}
 
 	var p *BinaryNode
@@ -209,11 +209,11 @@ func (node *BinaryNode) splice(btree *Btree) {
 		btree.root = c
 		p = nil
 	} else {
-		p = node.Parent()
+		p = node.parent()
 		switch node {
-		case p.Left():
+		case p.left():
 			p.setLeft(c)
-		case p.Right():
+		case p.right():
 			p.setRight(c)
 		default:
 			log.Fatal("unreachable")
@@ -225,14 +225,14 @@ func (node *BinaryNode) splice(btree *Btree) {
 }
 
 func (node *BinaryNode) remove(btree *Btree) {
-	if node.Left() == nil || node.Right() == nil {
+	if node.left() == nil || node.right() == nil {
 		node.splice(btree)
 		return
 	}
 
-	alt := node.Right()
-	for alt.Left() != nil {
-		alt = alt.Left()
+	alt := node.right()
+	for alt.left() != nil {
+		alt = alt.left()
 	}
 
 	node.value = alt.value
@@ -283,8 +283,8 @@ func (btree *Btree) Balanced() (bool, error) {
 		return false, errors.New("btree is nil")
 	}
 
-	left := btree.root.Left()
-	right := btree.root.Right()
+	left := btree.root.left()
+	right := btree.root.right()
 	diff := left.height() - right.height()
 	if 0 < diff {
 		return diff < 2, nil
