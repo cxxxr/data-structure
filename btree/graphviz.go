@@ -9,28 +9,28 @@ import (
 	"reflect"
 )
 
-func dot(output io.StringWriter, node Node) {
+func dot(output io.StringWriter, node Node, isRoot bool) {
 	hasChild := false
 
 	if !reflect.ValueOf(node.Left()).IsNil() {
 		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.Value(), node.Left().Value()))
-		dot(output, node.Left())
+		dot(output, node.Left(), false)
 		hasChild = true
 	}
 	if !reflect.ValueOf(node.Right()).IsNil() {
 		output.WriteString(fmt.Sprintf("%v -> %v;\n", node.Value(), node.Right().Value()))
-		dot(output, node.Right())
+		dot(output, node.Right(), false)
 		hasChild = true
 	}
 
-	if !hasChild {
+	if !hasChild && isRoot {
 		output.WriteString(fmt.Sprintf("%v;\n", node.Value()))
 	}
 }
 
 func GenDot(output io.StringWriter, root Node) {
 	output.WriteString("digraph btree {\n")
-	dot(output, root)
+	dot(output, root, true)
 	output.WriteString("}\n")
 }
 
