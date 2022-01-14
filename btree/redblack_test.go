@@ -1,10 +1,16 @@
 package btree
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestRedBlack(t *testing.T) {
 	var tree redBlackTree
-	tree.Add(Int(1))
-	tree.Add(Int(2))
-	// GenDotAndOpenImage("_redblack.dot", tree.root)
+	for i := 1; i <= 3; i++ {
+		fmt.Printf("### %v ###\n", i)
+		tree.Add(Int(i))
+		tree.Print()
+	}
+	// GenDotAndOpenImage("_redblack", tree.root)
 }
